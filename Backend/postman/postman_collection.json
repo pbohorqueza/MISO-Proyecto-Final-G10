@@ -1,0 +1,345 @@
+{
+	"info": {
+		"_postman_id": "f5a7b8c9-d1e2-3f4a-5b6c-7d8e9f0a1b2c",
+		"name": "MISO-Proyecto-Final-G10",
+		"description": "API collection for MISO Proyecto Final G10",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Fabricantes",
+			"item": [
+				{
+					"name": "Create Fabricante",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Fabricante Test\",\n    \"descripcion\": \"Descripción del fabricante\"\n}"
+						},
+						"url": {
+							"raw": "{{fabricantes_url}}",
+							"host": [
+								"{{fabricantes_url}}"
+							]
+						},
+						"description": "Create a new fabricante"
+					},
+					"response": []
+				},
+				{
+					"name": "List Fabricantes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{fabricantes_url}}",
+							"host": [
+								"{{fabricantes_url}}"
+							]
+						},
+						"description": "List all fabricantes"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Fabricante",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{fabricantes_url}}/{{fabricante_id}}",
+							"host": [
+								"{{fabricantes_url}}"
+							],
+							"path": [
+								"{{fabricante_id}}"
+							]
+						},
+						"description": "Get a specific fabricante by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Fabricante",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{fabricantes_url}}/{{fabricante_id}}",
+							"host": [
+								"{{fabricantes_url}}"
+							],
+							"path": [
+								"{{fabricante_id}}"
+							]
+						},
+						"description": "Delete a fabricante by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fabricantes_url}}/ping",
+							"host": [
+								"{{fabricantes_url}}"
+							],
+							"path": [
+								"ping"
+							]
+						},
+						"description": "Check the health of the fabricantes service"
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Database",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{fabricantes_url}}/reset",
+							"host": [
+								"{{fabricantes_url}}"
+							],
+							"path": [
+								"reset"
+							]
+						},
+						"description": "Reset the fabricantes database"
+					},
+					"response": []
+				}
+			],
+			"description": "Fabricantes service endpoints"
+		},
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Create Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"test_user\",\n    \"password\": \"password123\",\n    \"email\": \"test@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{usuarios_url}}",
+							"host": [
+								"{{usuarios_url}}"
+							]
+						},
+						"description": "Create a new usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Usuario",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"updated_username\",\n    \"email\": \"updated@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{usuarios_url}}/{{usuario_id}}",
+							"host": [
+								"{{usuarios_url}}"
+							],
+							"path": [
+								"{{usuario_id}}"
+							]
+						},
+						"description": "Update an existing usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"test_user\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{usuarios_url}}/auth",
+							"host": [
+								"{{usuarios_url}}"
+							],
+							"path": [
+								"auth"
+							]
+						},
+						"description": "Login a usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{usuarios_url}}/me",
+							"host": [
+								"{{usuarios_url}}"
+							],
+							"path": [
+								"me"
+							]
+						},
+						"description": "Validate a user token"
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{usuarios_url}}/ping",
+							"host": [
+								"{{usuarios_url}}"
+							],
+							"path": [
+								"ping"
+							]
+						},
+						"description": "Check the health of the usuarios service"
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Database",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{usuarios_url}}/reset",
+							"host": [
+								"{{usuarios_url}}"
+							],
+							"path": [
+								"reset"
+							]
+						},
+						"description": "Reset the usuarios database"
+					},
+					"response": []
+				}
+			],
+			"description": "Usuarios service endpoints"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "fabricantes_url",
+			"value": "http://localhost:3000/fabricantes",
+			"type": "string"
+		},
+		{
+			"key": "usuarios_url",
+			"value": "http://localhost:3001/usuarios",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "Bearer your_jwt_token_here",
+			"type": "string"
+		},
+		{
+			"key": "fabricante_id",
+			"value": "fabricante_id_here",
+			"type": "string"
+		},
+		{
+			"key": "usuario_id",
+			"value": "usuario_id_here",
+			"type": "string"
+		}
+	]
+}

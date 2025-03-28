@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = false
+name = "usuarios"
+
+[packages]
+bcrypt = "*"
+sqlalchemy = "*"
+flask = "*"
+python-dotenv = "*"
+psycopg2-binary = "*"
+
+[dev-packages]
+pytest = "*"
+pytest-flask = "*"
+pytest-mock = "*"
+pytest-cov = "*"
+pytest-env = "*"
+
+[requires]
+python_version = "3.11"

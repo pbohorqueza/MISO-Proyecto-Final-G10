@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = false
+name = "fabricantes"
+
+[packages]
+bcrypt = "*"
+sqlalchemy = "*"
+flask = "*"
+python-dotenv = "*"
+psycopg2-binary = "*"
+requests = "*"
+marshmallow = "*"
+sqlalchemy-serializer = "*"
+python-dateutil = "*"
+pytz = "*"
+
+[dev-packages]
+pytest = "*"
+pytest-flask = "*"
+pytest-mock = "*"
+pytest-cov = "*"
+pytest-env = "*"
+
+[requires]
+python_version = "3.11"

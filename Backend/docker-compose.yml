@@ -1,0 +1,63 @@
+services:
+
+  usuarios:
+    build:
+      context: ./usuarios
+      dockerfile: Dockerfile
+    ports:
+      - "3000:5000"
+    environment:
+      DB_NAME: usuarios
+      DB_HOST: usuarios_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    networks:
+      - ccp_gestion_net
+    depends_on:
+      - usuarios_db
+
+  usuarios_db:
+    image: postgres
+    environment:
+      POSTGRES_HOST: localhost
+      POSTGRES_DB: usuarios
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5430:5432'
+    networks:
+      - ccp_gestion_net
+  
+  fabricantes:
+    build:
+      context: ./fabricantes
+      dockerfile: Dockerfile
+    ports:
+      - "3001:5000"
+    environment:
+      DB_NAME: fabricantes
+      DB_HOST: fabricantes_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    networks:
+      - ccp_gestion_net
+    depends_on:
+      - fabricantes_db
+
+  fabricantes_db:
+    image: postgres
+    environment:
+      POSTGRES_HOST: localhost
+      POSTGRES_DB: fabricantes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5431:5432'
+    networks:
+      - ccp_gestion_net
+
+networks:
+  ccp_gestion_net:
+    driver: bridge
