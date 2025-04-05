@@ -17,8 +17,9 @@ class CreateSalesPlanSellerCommand(BaseCommand):
             raise ConflictError(f"Seller with ID {self.data['seller_id']} already exists")
 
         seller = SalesPlanSeller(
-            name=self.data['name'],
-            seller_id=self.data['seller_id']
+            nombre=self.data['nombre'],
+            seller_id=self.data['seller_id'],
+            sales_plan_id=self.data.get('sales_plan_id')
         )
 
         db.session.add(seller)

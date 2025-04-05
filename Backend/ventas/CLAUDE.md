@@ -40,6 +40,7 @@
 ### Code Organization
 - Follow command pattern for business logic (app/commands/)
 - Centralize validation logic in app/lib/validators.py
+- Centralize responses in app/responses/**
 - Use custom error classes from app/lib/errors.py
 - Minimize comments - code should be self-explanatory
 - Keep docstrings minimal and focused on "why" not "what"
@@ -49,3 +50,4 @@
 - API routes have no prefix - use direct endpoint names (e.g., '/sales-plans')
 - Service name in Docker configuration is 'sales'
 - Project name in pyproject.toml is 'sales'
+

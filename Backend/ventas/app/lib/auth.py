@@ -5,6 +5,7 @@ from werkzeug.exceptions import Unauthorized
 import requests
 from app.config.application import ApplicationConfig
 
+
 def validate_token(f):
     """
     Decorator to validate token with the usuarios microservice.
@@ -38,7 +39,7 @@ def validate_token(f):
 
             # Continue to the original function
             return f(*args, **kwargs)
-        except Exception as e:
+        except requests.exceptions.RequestException as e:
             return jsonify({'message': f'Authentication error: {str(e)}'}), 401
 
     return decorated_function

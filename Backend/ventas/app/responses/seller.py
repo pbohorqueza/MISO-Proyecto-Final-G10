@@ -4,17 +4,17 @@ from pydantic import BaseModel, Field
 
 
 class SellerPath(BaseModel):
-    """Path parameters for Seller routes"""
-    id: int = Field(..., description="Seller ID")
+    """Parámetros de ruta para las rutas de Vendedor"""
+    seller_id: int = Field(..., description="ID del vendedor")
 
 
 class SellerResponse(BaseModel):
-    """Schema for returning a Seller"""
+    """Esquema para devolver un Vendedor"""
     id: int
-    name: str
+    nombre: str
     seller_id: int
 
 
 class SellerListResponse(BaseModel):
-    """Schema for returning multiple Sellers"""
+    """Esquema para devolver múltiples Vendedores"""
     items: List[SellerResponse]

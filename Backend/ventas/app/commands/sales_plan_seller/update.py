@@ -15,8 +15,8 @@ class UpdateSalesPlanSellerCommand(BaseCommand):
         if not seller:
             raise NotFoundError(f"Seller with ID {self.seller_id} not found")
 
-        if 'name' in self.data:
-            seller.name = self.data['name']
+        if 'nombre' in self.data:
+            seller.nombre = self.data['nombre']
 
         db.session.commit()
 

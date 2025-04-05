@@ -1,15 +1,15 @@
-from flask_openapi3 import OpenAPI, Info
 from flask import jsonify, json, redirect
-from werkzeug.exceptions import HTTPException
+from flask_openapi3 import OpenAPI, Info
+from flask_openapi3.models import Server
 from marshmallow import ValidationError
-from flask_openapi3.models import Server, SecurityScheme
+from werkzeug.exceptions import HTTPException
 
-from app.blueprints import api, command_bp
+from app.blueprints import api, plan_blueprint, seller_blueprint, command_bp
 from app.blueprints.commands import commands
 from app.config.application import ApplicationConfig
 from app.lib.database import db, migrate
-from app.lib.schema import marshmallow
 from app.lib.errors import ApiError
+from app.lib.schema import marshmallow
 
 
 def create_app():
@@ -100,7 +100,12 @@ def create_app():
     """
     The following code snippet registers the blueprints for the application.
     """
-    app.register_api(api)  # Register the OpenAPI APIBlueprint
+
+    # Register all the API blueprints
+    app.register_api(api)  # Main API blueprint
+    app.register_api(plan_blueprint)  # Sales plans blueprint
+    app.register_api(seller_blueprint)  # Sellers blueprint
+
     app.register_blueprint(command_bp)  # Register regular blueprint for commands
     app.register_blueprint(commands)  # Register commands blueprint
 

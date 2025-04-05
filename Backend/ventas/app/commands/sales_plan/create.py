@@ -12,16 +12,16 @@ class CreateSalesPlanCommand(BaseCommand):
 
     def execute(self):
         try:
-            validate_date_range(self.data['start_date'], self.data['end_date'])
+            validate_date_range(self.data['fecha_inicio'], self.data['fecha_fin'])
         except ValueError as e:
             raise BadRequestError(str(e))
 
         sales_plan = SalesPlan(
-            name=self.data['name'],
-            description=self.data['description'],
-            target_amount=float(self.data['target_amount']),
-            start_date=self.data['start_date'],
-            end_date=self.data['end_date']
+            nombre=self.data['nombre'],
+            descripcion=self.data['descripcion'],
+            valor_objetivo=float(self.data['valor_objetivo']),
+            fecha_inicio=self.data['fecha_inicio'],
+            fecha_fin=self.data['fecha_fin']
         )
 
         seller_ids = self.data.get('seller_ids', [])
@@ -34,7 +34,7 @@ class CreateSalesPlanCommand(BaseCommand):
             if not seller:
                 # In a real implementation, make an authenticated API call to users microservice
                 seller = SalesPlanSeller(
-                    name=f"Seller {seller_id}",  # This would come from the users microservice
+                    nombre=f"Seller {seller_id}",  # This would come from the users microservice
                     seller_id=seller_id
                 )
                 db.session.add(seller)

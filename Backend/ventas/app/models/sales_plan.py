@@ -14,11 +14,11 @@ class SalesPlan(db.Model, Model):
     __tablename__ = 'sales_plans'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
-    description: Mapped[str] = mapped_column(String(500), nullable=False)
-    target_amount: Mapped[float] = mapped_column(Float, nullable=False)
-    start_date: Mapped[str] = mapped_column(String(10), nullable=False)  # YYYY-MM-DD format (10 chars)
-    end_date: Mapped[str] = mapped_column(String(10), nullable=False)  # YYYY-MM-DD format (10 chars)
+    nombre: Mapped[str] = mapped_column(String(255), nullable=False)
+    descripcion: Mapped[str] = mapped_column(String(500), nullable=False)
+    valor_objetivo: Mapped[float] = mapped_column(Float, nullable=False)
+    fecha_inicio: Mapped[str] = mapped_column(String(10), nullable=False)  # YYYY-MM-DD format (10 chars)
+    fecha_fin: Mapped[str] = mapped_column(String(10), nullable=False)  # YYYY-MM-DD format (10 chars)
 
     # One-to-many relationship with sales plan sellers
     sellers: Mapped[List["SalesPlanSeller"]] = relationship(

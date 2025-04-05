@@ -6,21 +6,21 @@ from app.responses.seller import SellerResponse
 
 
 class SalesPlanPath(BaseModel):
-    """Path parameters for SalesPlan routes"""
-    id: int = Field(..., description="Sales plan ID")
+    """Parámetros de ruta para las rutas de Planes de Venta"""
+    plan_id: int = Field(..., description="ID del plan de ventas")
 
 
 class SalesPlanResponse(BaseModel):
-    """Schema for returning a SalesPlan"""
+    """Esquema para devolver un Plan de Ventas"""
     id: int
-    name: str
-    description: str
-    target_amount: float
-    start_date: str
-    end_date: str
+    nombre: str
+    descripcion: str
+    valor_objetivo: float
+    fecha_inicio: str
+    fecha_fin: str
     sellers: List[SellerResponse]
 
 
 class SalesPlanListResponse(BaseModel):
-    """Schema for returning multiple SalesPlans"""
+    """Esquema para devolver múltiples Planes de Venta"""
     items: List[SalesPlanResponse]

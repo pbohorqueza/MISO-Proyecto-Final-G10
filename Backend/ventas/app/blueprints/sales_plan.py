@@ -11,101 +11,101 @@ from app.commands.sales_plan.delete import DeleteSalesPlanCommand
 from app.commands.sales_plan.get import GetSalesPlanCommand, GetAllSalesPlansCommand
 from app.commands.sales_plan.update import UpdateSalesPlanCommand
 from app.lib.auth import validate_token, director_required
-from . import api
+from . import plan_blueprint
 
 from app.responses.sales_plan import SalesPlanResponse, SalesPlanListResponse, SalesPlanPath
 from app.responses.seller import SellerResponse
 from app.responses import ErrorResponse
 
-sales_plan_tag = Tag(name="Sales Plans", description="Operations on sales plans")
+sales_plan_tag = Tag(name="Planes de Venta", description="Operaciones sobre planes de venta")
 
 
 # Pydantic models for request data
 class SalesPlanCreate(BaseModel):
-    """Schema for creating a new SalesPlan"""
-    name: str = Field(..., min_length=3, max_length=255, description="Sales plan name")
-    description: str = Field(..., min_length=3, max_length=500, description="Sales plan description")
-    target_amount: float = Field(..., gt=0, description="Target sales amount")
-    start_date: str = Field(..., description="Start date in format YYYY-MM-DD")
-    end_date: str = Field(..., description="End date in format YYYY-MM-DD")
-    seller_ids: List[int] = Field(..., description="List of seller IDs assigned to this plan")
-    
-    @field_validator('start_date', 'end_date', mode='after')
+    """Esquema para crear un nuevo Plan de Ventas"""
+    nombre: str = Field(..., min_length=3, max_length=255, description="Nombre del plan de ventas")
+    descripcion: str = Field(..., min_length=3, max_length=500, description="Descripción del plan de ventas")
+    valor_objetivo: float = Field(..., gt=0, description="Monto objetivo de ventas")
+    fecha_inicio: str = Field(..., description="Fecha de inicio en formato YYYY-MM-DD")
+    fecha_fin: str = Field(..., description="Fecha de fin en formato YYYY-MM-DD")
+    seller_ids: List[int] = Field(..., description="Lista de IDs de vendedores asignados a este plan")
+
+    @field_validator('fecha_inicio', 'fecha_fin', mode='after')
     @classmethod
     def validate_date(cls, value: str) -> str:
-        """Validate that the date string represents a valid date"""
+        """Validar que la cadena de fecha representa una fecha válida"""
         return validate_date_string(value)
-    
+
     @model_validator(mode='after')
     def validate_dates(self):
-        """Validate that end_date is after start_date"""
-        if not hasattr(self, 'start_date') or not hasattr(self, 'end_date'):
+        """Validar que fecha_fin es posterior a fecha_inicio"""
+        if not hasattr(self, 'fecha_inicio') or not hasattr(self, 'fecha_fin'):
             return self
-            
-        validate_date_range(self.start_date, self.end_date)
+
+        validate_date_range(self.fecha_inicio, self.fecha_fin)
         return self
-        
+
     @field_validator('seller_ids', mode='after')
     @classmethod
     def validate_seller_ids(cls, v: List[int]) -> List[int]:
-        """Validate that seller_ids is not empty"""
+        """Validar que seller_ids no está vacío"""
         if len(v) < 1:
-            raise ValueError("At least one seller ID must be provided")
+            raise ValueError("Se debe proporcionar al menos un ID de vendedor")
         return v
 
 
 class SalesPlanUpdate(BaseModel):
-    """Schema for updating an existing SalesPlan"""
-    name: Optional[str] = Field(None, min_length=3, max_length=255, description="Sales plan name")
-    description: Optional[str] = Field(None, min_length=3, max_length=500, description="Sales plan description")
-    target_amount: Optional[float] = Field(None, gt=0, description="Target sales amount")
-    start_date: Optional[str] = Field(None, description="Start date in format YYYY-MM-DD")
-    end_date: Optional[str] = Field(None, description="End date in format YYYY-MM-DD")
-    seller_ids: Optional[List[int]] = Field(None, description="List of seller IDs assigned to this plan")
-    
-    @field_validator('start_date', 'end_date', mode='after')
+    """Esquema para actualizar un Plan de Ventas existente"""
+    nombre: Optional[str] = Field(None, min_length=3, max_length=255, description="Nombre del plan de ventas")
+    descripcion: Optional[str] = Field(None, min_length=3, max_length=500, description="Descripción del plan de ventas")
+    valor_objetivo: Optional[float] = Field(None, gt=0, description="Monto objetivo de ventas")
+    fecha_inicio: Optional[str] = Field(None, description="Fecha de inicio en formato YYYY-MM-DD")
+    fecha_fin: Optional[str] = Field(None, description="Fecha de fin en formato YYYY-MM-DD")
+    seller_ids: Optional[List[int]] = Field(None, description="Lista de IDs de vendedores asignados a este plan")
+
+    @field_validator('fecha_inicio', 'fecha_fin', mode='after')
     @classmethod
     def validate_date(cls, value: Optional[str]) -> Optional[str]:
-        """Validate that the date string represents a valid date if provided"""
+        """Validar que la cadena de fecha representa una fecha válida si se proporciona"""
         return validate_date_string(value)
-    
+
     @model_validator(mode='after')
     def validate_dates(self):
-        """Validate that end_date is after start_date if both are provided"""
-        if not hasattr(self, 'start_date') or not hasattr(self, 'end_date'):
+        """Validar que fecha_fin es posterior a fecha_inicio si se proporcionan ambas"""
+        if not hasattr(self, 'fecha_inicio') or not hasattr(self, 'fecha_fin'):
             return self
-            
-        validate_date_range(self.start_date, self.end_date)
+
+        validate_date_range(self.fecha_inicio, self.fecha_fin)
         return self
-    
+
     @field_validator('seller_ids', mode='after')
     @classmethod
     def validate_seller_ids(cls, v: Optional[List[int]]) -> Optional[List[int]]:
-        """Validate that seller_ids is not empty if provided"""
+        """Validar que seller_ids no está vacío si se proporciona"""
         if v is not None and len(v) < 1:
-            raise ValueError("At least one seller ID must be provided")
+            raise ValueError("Se debe proporcionar al menos un ID de vendedor")
         return v
 
 
-@api.get('/sales-plans', tags=[sales_plan_tag], responses={200: SalesPlanListResponse})
+@plan_blueprint.get('', tags=[sales_plan_tag], responses={200: SalesPlanListResponse})
 @validate_token
 def get_sales_plans():
-    """Get all sales plans"""
+    """Obtener todos los planes de venta"""
     sales_plans = GetAllSalesPlansCommand().execute()
 
     return SalesPlanListResponse(
         items=[
             SalesPlanResponse(
                 id=plan.id,
-                name=plan.name,
-                description=plan.description,
-                target_amount=plan.target_amount,
-                start_date=plan.start_date,
-                end_date=plan.end_date,
+                nombre=plan.nombre,
+                descripcion=plan.descripcion,
+                valor_objetivo=plan.valor_objetivo,
+                fecha_inicio=plan.fecha_inicio,
+                fecha_fin=plan.fecha_fin,
                 sellers=[
                     SellerResponse(
                         id=seller.id,
-                        name=seller.name,
+                        nombre=seller.nombre,
                         seller_id=seller.seller_id
                     ) for seller in plan.sellers
                 ]
@@ -114,48 +114,48 @@ def get_sales_plans():
     ).model_dump()
 
 
-@api.get('/sales-plans/<int:id>', tags=[sales_plan_tag], responses={200: SalesPlanResponse, 404: ErrorResponse})
+@plan_blueprint.get('/<plan_id>', tags=[sales_plan_tag], responses={200: SalesPlanResponse, 404: ErrorResponse})
 @validate_token
 def get_sales_plan(path: SalesPlanPath):
-    """Get a specific sales plan by ID"""
-    sales_plan = GetSalesPlanCommand(path.id).execute()
+    """Obtener un plan de venta específico por ID"""
+    sales_plan = GetSalesPlanCommand(path.plan_id).execute()
 
     return SalesPlanResponse(
         id=sales_plan.id,
-        name=sales_plan.name,
-        description=sales_plan.description,
-        target_amount=sales_plan.target_amount,
-        start_date=sales_plan.start_date,
-        end_date=sales_plan.end_date,
+        nombre=sales_plan.nombre,
+        descripcion=sales_plan.descripcion,
+        valor_objetivo=sales_plan.valor_objetivo,
+        fecha_inicio=sales_plan.fecha_inicio,
+        fecha_fin=sales_plan.fecha_fin,
         sellers=[
             SellerResponse(
                 id=seller.id,
-                name=seller.name,
+                nombre=seller.nombre,
                 seller_id=seller.seller_id
             ) for seller in sales_plan.sellers
         ]
     ).model_dump()
 
 
-@api.post('/sales-plans', tags=[sales_plan_tag],
-          responses={201: SalesPlanResponse, 400: ErrorResponse, 403: ErrorResponse})
+@plan_blueprint.post('', tags=[sales_plan_tag],
+                     responses={201: SalesPlanResponse, 400: ErrorResponse, 403: ErrorResponse})
 @validate_token
 @director_required
 def create_sales_plan(body: SalesPlanCreate):
-    """Create a new sales plan - requires Director role"""
+    """Crear un nuevo plan de venta - requiere rol de Director"""
     sales_plan = CreateSalesPlanCommand(body.model_dump()).execute()
 
     response = SalesPlanResponse(
         id=sales_plan.id,
-        name=sales_plan.name,
-        description=sales_plan.description,
-        target_amount=sales_plan.target_amount,
-        start_date=sales_plan.start_date,
-        end_date=sales_plan.end_date,
+        nombre=sales_plan.nombre,
+        descripcion=sales_plan.descripcion,
+        valor_objetivo=sales_plan.valor_objetivo,
+        fecha_inicio=sales_plan.fecha_inicio,
+        fecha_fin=sales_plan.fecha_fin,
         sellers=[
             SellerResponse(
                 id=seller.id,
-                name=seller.name,
+                nombre=seller.nombre,
                 seller_id=seller.seller_id
             ) for seller in sales_plan.sellers
         ]
@@ -164,39 +164,39 @@ def create_sales_plan(body: SalesPlanCreate):
     return response.model_dump(), 201
 
 
-@api.put('/sales-plans/<int:id>', tags=[sales_plan_tag],
-         responses={200: SalesPlanResponse, 400: ErrorResponse, 403: ErrorResponse, 404: ErrorResponse})
+@plan_blueprint.put('/<plan_id>', tags=[sales_plan_tag],
+                    responses={200: SalesPlanResponse, 400: ErrorResponse, 403: ErrorResponse, 404: ErrorResponse})
 @validate_token
 @director_required
 def update_sales_plan(path: SalesPlanPath, body: SalesPlanUpdate):
-    """Update an existing sales plan - requires Director role"""
-    id = path.id
+    """Actualizar un plan de venta existente - requiere rol de Director"""
+    id = path.plan_id
     sales_plan = UpdateSalesPlanCommand(id, body.model_dump(exclude_none=True)).execute()
 
     return SalesPlanResponse(
         id=sales_plan.id,
-        name=sales_plan.name,
-        description=sales_plan.description,
-        target_amount=sales_plan.target_amount,
-        start_date=sales_plan.start_date,
-        end_date=sales_plan.end_date,
+        nombre=sales_plan.nombre,
+        descripcion=sales_plan.descripcion,
+        valor_objetivo=sales_plan.valor_objetivo,
+        fecha_inicio=sales_plan.fecha_inicio,
+        fecha_fin=sales_plan.fecha_fin,
         sellers=[
             SellerResponse(
                 id=seller.id,
-                name=seller.name,
+                nombre=seller.nombre,
                 seller_id=seller.seller_id
             ) for seller in sales_plan.sellers
         ]
     ).model_dump()
 
 
-@api.delete('/sales-plans/<int:id>', tags=[sales_plan_tag],
-            responses={204: None, 403: ErrorResponse, 404: ErrorResponse})
+@plan_blueprint.delete('/<plan_id>', tags=[sales_plan_tag],
+                       responses={204: None, 403: ErrorResponse, 404: ErrorResponse})
 @validate_token
 @director_required
 def delete_sales_plan(path: SalesPlanPath):
-    """Delete a sales plan - requires Director role"""
-    id = path.id
+    """Eliminar un plan de venta - requiere rol de Director"""
+    id = path.plan_id
     DeleteSalesPlanCommand(id).execute()
 
     return '', 204

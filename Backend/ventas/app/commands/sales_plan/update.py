@@ -17,23 +17,23 @@ class UpdateSalesPlanCommand(BaseCommand):
         if not sales_plan:
             raise NotFoundError(f"Sales plan with ID {self.sales_plan_id} not found")
 
-        if 'name' in self.data:
-            sales_plan.name = self.data['name']
+        if 'nombre' in self.data:
+            sales_plan.nombre = self.data['nombre']
 
-        if 'description' in self.data:
-            sales_plan.description = self.data['description']
+        if 'descripcion' in self.data:
+            sales_plan.descripcion = self.data['descripcion']
 
-        if 'target_amount' in self.data:
-            sales_plan.target_amount = float(self.data['target_amount'])
+        if 'valor_objetivo' in self.data:
+            sales_plan.valor_objetivo = float(self.data['valor_objetivo'])
 
-        if 'start_date' in self.data:
-            sales_plan.start_date = self.data['start_date']
+        if 'fecha_inicio' in self.data:
+            sales_plan.fecha_inicio = self.data['fecha_inicio']
 
-        if 'end_date' in self.data:
-            sales_plan.end_date = self.data['end_date']
+        if 'fecha_fin' in self.data:
+            sales_plan.fecha_fin = self.data['fecha_fin']
         
         try:
-            validate_date_range(sales_plan.start_date, sales_plan.end_date)
+            validate_date_range(sales_plan.fecha_inicio, sales_plan.fecha_fin)
         except ValueError as e:
             raise BadRequestError(str(e))
 
@@ -48,7 +48,7 @@ class UpdateSalesPlanCommand(BaseCommand):
 
                 if not seller:
                     seller = SalesPlanSeller(
-                        name=f"Seller {seller_id}",
+                        nombre=f"Seller {seller_id}",
                         seller_id=seller_id
                     )
                     db.session.add(seller)

@@ -14,12 +14,12 @@ class SalesPlanSeller(db.Model, Model):
     __tablename__ = 'sales_plan_sellers'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    nombre: Mapped[str] = mapped_column(String(255), nullable=False)
     seller_id: Mapped[int] = mapped_column(Integer, nullable=False)
-    
+
     # Foreign key to sales plan
     sales_plan_id: Mapped[Optional[int]] = mapped_column(
-        Integer, 
+        Integer,
         ForeignKey("sales_plans.id"),
         nullable=True
     )
